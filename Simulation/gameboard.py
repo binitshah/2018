@@ -1,3 +1,6 @@
+# Gameboard.py
+# Simulator of the competition.
+#
 from Tkinter import *
 import math
 import time
