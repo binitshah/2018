@@ -10,7 +10,7 @@ CANVAS_MID_X = WIDTH/2
 CANVAS_MID_Y = HEIGHT/2
 SIDE = WIDTH/4
 
-robot_center = [100, 240, 0]
+robot_center = [100, 240, 0] # [x, y, rotation]
 treasureOnRobot = 0
 flagTurned = 0
 rotationLoopTime = .01
@@ -90,108 +90,27 @@ def calculate_error():
 
 def robot_move(robot_center, direction, magnitude):
     global loopTime
-    if (direction == "North"):
-        #breakCondition = break_condition(robot_center)
-        #if (breakCondition == 1):
-        #    return robot_center
-        error = calculate_error()
-        magnitude = magnitude * -1
-        curr_magnitude = 0
-        while(curr_magnitude > magnitude):
-            draw_square(robot_center, "white")
-            angle = math.radians(float(robot_center[2]))
-            old_magnitude = math.hypot(robot_center[0], robot_center[1])
-            robot_center[0] = robot_center[0] - math.sin(angle)* error/5 - math.sin(angle) * 1
-            robot_center[1] = robot_center[1] - math.cos(angle) * 1 - math.cos(angle) * error/5
-            if (error <= 0):
-                robot_center[2] = robot_center[2] - error / 10
-            if (error > 0):
-                robot_center[2] = robot_center[2] + error / 10
-            curr_magnitude = curr_magnitude + math.hypot(robot_center[0],robot_center[1]) - old_magnitude
-            init()
-            draw_square(robot_center, "red")
-            draw_treasure_chest_on_robot(robot_center)
-            breakCondition = break_condition(robot_center)
-            if (breakCondition == 1):
-                break
-            canvas.update()
-            time.sleep(loopTime)
-    if (direction == "South"):
-        #breakCondition = break_condition(robot_center)
-        #if (breakCondition == 1):
-        #    return robot_center
-        error = calculate_error()
-        curr_magnitude = 0
-        while(curr_magnitude < magnitude):
-            draw_square(robot_center, "white")
-            angle = math.radians(float(robot_center[2]))
-            old_magnitude = math.hypot(robot_center[0], robot_center[1])
-            robot_center[0] = robot_center[0] + math.sin(angle)* error/5 + math.sin(angle) * 1
-            robot_center[1] = robot_center[1] + math.cos(angle) * 1 + math.cos(angle) * error/5
-            if (error > 0):
-                robot_center[2] = robot_center[2] - error / 10
-            if (error <= 0):
-                robot_center[2] = robot_center[2] + error / 10
-            curr_magnitude = curr_magnitude + math.hypot(robot_center[0],robot_center[1]) - old_magnitude
-            init()
-            draw_square(robot_center, "red")
-            draw_treasure_chest_on_robot(robot_center)
-            breakCondition = break_condition(robot_center)
-            if (breakCondition == 1):
-                break
-            canvas.update()
-            time.sleep(loopTime)
-    if (direction == "East"):
-        #breakCondition = break_condition(robot_center)
-        #if (breakCondition == 1):
-        #    return robot_center
-        error = calculate_error()
-        curr_magnitude = 0
-        while(curr_magnitude < magnitude):
-            draw_square(robot_center, "white")
-            angle = math.radians(float(robot_center[2]))
-            old_magnitude = math.hypot(robot_center[0], robot_center[1])
-            robot_center[1] = robot_center[1] + math.sin(angle)* error/5 + math.sin(angle) * 1
-            robot_center[0] = robot_center[0] + math.cos(angle) * 1 + math.cos(angle) * error/5
-            if (error > 0):
-                robot_center[2] = robot_center[2] - error / 10
-            if (error <= 0):
-                robot_center[2] = robot_center[2] + error / 10
-            curr_magnitude = curr_magnitude + math.hypot(robot_center[0],robot_center[1]) - old_magnitude
-            init()
-            draw_square(robot_center, "red")
-            draw_treasure_chest_on_robot(robot_center)
-            breakCondition = break_condition(robot_center)
-            if (breakCondition == 1):
-                break
-            canvas.update()
-            time.sleep(loopTime)
-    if (direction == "West"):
-        #breakCondition = break_condition(robot_center)
-        #if (breakCondition == 1):
-        #    return robot_center
-        error = calculate_error()
-        magnitude = magnitude * -1
-        curr_magnitude = 0
-        while(curr_magnitude > magnitude):
-            draw_square(robot_center, "white")
-            angle = math.radians(float(robot_center[2]))
-            old_magnitude = math.hypot(robot_center[0], robot_center[1])
-            robot_center[1] = robot_center[1] - math.sin(angle) * error/5 - math.sin(angle) * 1
-            robot_center[0] = robot_center[0] - math.cos(angle) * 1 - math.cos(angle) * error/5
-            if (error > 0):
-                robot_center[2] = robot_center[2] + error / 10
-            if (error <= 0):
-                robot_center[2] = robot_center[2] - error / 10
-            curr_magnitude = curr_magnitude + math.hypot(robot_center[0],robot_center[1]) - old_magnitude
-            init()
-            draw_square(robot_center, "red")
-            draw_treasure_chest_on_robot(robot_center)
-            breakCondition = break_condition(robot_center)
-            if (breakCondition == 1):
-                break
-            canvas.update()
-            time.sleep(loopTime)
+    direction_vals_dict = {"North": [1, 0, 1], "West": [1, 1, 0], "South": [-1, 0, 1], "East": [-1, 1, 0]}
+    direction_vals = direction_vals_dict[direction]
+    error = calculate_error()
+    curr_magnitude = 0
+    while (curr_magnitude < magnitude):
+        draw_square(robot_center, "white")
+        angle = math.radians(float(robot_center[2]))
+        old_magnitude = math.hypot(robot_center[0], robot_center[1])
+        robot_center[direction_vals[1]] += (-1 * direction_vals[0]) * (math.sin(angle) * error/5 + math.sin(angle))
+        robot_center[direction_vals[2]] += (-1 * direction_vals[0]) * (math.cos(angle) + math.cos(angle) * error/5)
+        robot_center[2] += direction_vals[0] * abs(error) / 10
+        curr_magnitude = curr_magnitude + math.hypot(robot_center[0],robot_center[1]) - old_magnitude
+        init()
+        draw_square(robot_center, "red")
+        draw_treasure_chest_on_robot(robot_center)
+        breakCondition = break_condition(robot_center)
+        if (breakCondition == 1):
+            break
+        canvas.update()
+        time.sleep(loopTime)
+
     return robot_center
 
 def robot_rotate(robot_center, angle, direction):
