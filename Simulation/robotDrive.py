@@ -46,17 +46,18 @@ from gameboard import *
 
 
 def test():
-   IRcode = getIRCode()
-   print IRcode[:]  
-   distanceSensors = [0, 0, 0, 0, 0, 0, 0, 0]
-   distanceSensors = getDistanceSensorReadings()
-   printDistances(distanceSensors)
+    IRcode = getIRCode()
+    print IRcode[:]  
+    distanceSensors = [0, 0, 0, 0, 0, 0, 0, 0]
+    distanceSensors = getDistanceSensorReadings()
+    printDistances(distanceSensors)
    #raw_input("Press Enter to return")
 #    robotMove(120, "South")
 #    dididoit = partAC()
    #print "dididoit = ", dididoit
-   robotMove(2000, "South")
-   raw_input("Press Enter to return")
+#    robotMove(2000, "South")
+    robotRotate(10, "cw")
+    raw_input("Press Enter to return")
 
 random.seed()
 init()

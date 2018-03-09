@@ -118,40 +118,21 @@ def robot_move(robot_center, direction, magnitude):
 
 def robot_rotate(robot_center, angle, direction):
     global rotationLoopTime
-    if (direction == "ccw"):
-        #breakCondition = break_condition(robot_center)
-        #if (breakCondition == 1):
-        #    return robot_center
-        angle = angle + angle * .5 * random.random()
-        final_angle = robot_center[2] - angle
-        while(final_angle < robot_center[2]):
-            draw_square(robot_center, "white")
-            robot_center[2] = robot_center[2] - 1
-            init()
-            draw_square(robot_center, "red")
-            draw_treasure_chest_on_robot(robot_center)
-            breakCondition = break_condition(robot_center)
-            if (breakCondition == 1):
-                break
-            canvas.update()
-            time.sleep(rotationLoopTime)
-    if (direction == "cw"):
-        #breakCondition = break_condition(robot_center)
-        #if (breakCondition == 1):
-        #    return robot_center
-        angle = angle - angle * .5 * random.random()
-        final_angle = robot_center[2] + angle
-        while(final_angle > robot_center[2]):
-            draw_square(robot_center, "white")
-            robot_center[2] = robot_center[2] + 1
-            init()
-            draw_square(robot_center, "red")
-            draw_treasure_chest_on_robot(robot_center)
-            breakCondition = break_condition(robot_center)
-            if (breakCondition == 1):
-                break
-            canvas.update()
-            time.sleep(rotationLoopTime)
+    rotation_vals_dict = {"cw": 1, "ccw": -1}
+    angle += -1 * rotation_vals_dict[direction] * angle * .5 * random.random()
+    final_angle = robot_center[2] + angle * rotation_vals_dict[direction]
+    while(abs(final_angle - robot_center[2]) > 1):
+        draw_square(robot_center, "white")
+        robot_center[2] = robot_center[2] + rotation_vals_dict[direction]
+        init()
+        draw_square(robot_center, "red")
+        draw_treasure_chest_on_robot(robot_center)
+        breakCondition = break_condition(robot_center)
+        if (breakCondition == 1):
+            break
+        canvas.update()
+        time.sleep(rotationLoopTime)
+        
     return robot_center
 
 def init():
